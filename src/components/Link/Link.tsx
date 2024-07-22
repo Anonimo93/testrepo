@@ -1,13 +1,17 @@
-import { type FC, type MouseEventHandler, useCallback } from 'react';
-import WebApp from '@twa-dev/sdk';
-import { Link as RouterLink, type LinkProps } from 'react-router-dom';
+import { type FC, type MouseEventHandler, type JSX, useCallback } from 'react';
+import { type LinkProps as NextLinkProps, default as NextLink } from 'next/link';
 
-import './Link.css';
+import { getWebApp } from '@/utils/getWebApp';
+
+import './styles.css';
+
+export interface LinkProps extends NextLinkProps, Omit<JSX.IntrinsicElements['a'], 'href'> {
+}
 
 export const Link: FC<LinkProps> = ({
   className,
   onClick: propsOnClick,
-  to,
+  href,
   ...rest
 }) => {
   const onClick = useCallback<MouseEventHandler<HTMLAnchorElement>>((e) => {
@@ -16,10 +20,10 @@ export const Link: FC<LinkProps> = ({
     // Compute if target path is external. In this case we would like to open link using
     // TMA method.
     let path: string;
-    if (typeof to === 'string') {
-      path = to;
+    if (typeof href === 'string') {
+      path = href;
     } else {
-      const { search = '', pathname = '', hash = '' } = to;
+      const { search = '', pathname = '', hash = '' } = href;
       path = `${pathname}?${search}#${hash}`;
     }
 
@@ -30,14 +34,14 @@ export const Link: FC<LinkProps> = ({
 
     if (isExternal) {
       e.preventDefault();
-      WebApp.openLink(targetUrl.toString());
+      getWebApp().openLink(targetUrl.toString());
     }
-  }, [to, propsOnClick]);
+  }, [href, propsOnClick]);
 
   return (
-    <RouterLink
+    <NextLink
       {...rest}
-      to={to}
+      href={href}
       onClick={onClick}
       className={[className, 'link'].filter(Boolean).join(' ')}
     />

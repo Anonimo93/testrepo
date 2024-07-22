@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import './RGB.css';
+import './styles.css';
 
 export type RGBProps = JSX.IntrinsicElements['div'] & {
   color: string;

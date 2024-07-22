@@ -1,9 +1,11 @@
-import { type FC, useMemo } from 'react';
+'use client';
+
+import { useMemo } from 'react';
 import { List, Placeholder } from '@telegram-apps/telegram-ui';
-import WebApp from '@twa-dev/sdk';
 import type { WebAppUser } from '@twa-dev/types';
 
-import { DisplayData, type DisplayDataRow } from '@/components/DisplayData/DisplayData.tsx';
+import { DisplayData, type DisplayDataRow } from '@/components/DisplayData/DisplayData';
+import { getWebApp } from '@/utils/getWebApp';
 
 // TODO: @twa-dev/sdk is outdated, as well as @twa-dev/types.
 interface ExactWebAppUser extends WebAppUser {
@@ -26,9 +28,10 @@ function getUserRows(user: ExactWebAppUser): DisplayDataRow[] {
   ];
 }
 
-export const InitDataPage: FC = () => {
-  const initDataRaw = WebApp.initData;
-  const initData = WebApp.initDataUnsafe;
+export default function InitDataPage() {
+  const webApp = getWebApp();
+  const initDataRaw = webApp.initData;
+  const initData = webApp.initDataUnsafe;
 
   const initDataRows = useMemo<DisplayDataRow[] | undefined>(() => {
     if (!initData || !initDataRaw) {
